@@ -1,0 +1,476 @@
+/* =================================================== */
+/* ZestyTheme - CLEAN VERSION (Fixed by AI Assistant) */
+/* Masalah diperbaiki:                                */
+/* 1. Poster hilang di detail page                   */
+/* 2. Background hitam pekat di detail page          */
+/* =================================================== */
+
+/* ==================== IMPORT & VARIABLES ==================== */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --rounding: 12px;
+    --rounding-alt: 9px;
+    --rounding-large: 24px;
+    --rounding-circle: 100px;
+}
+
+/* ==================== GLOBAL STYLES ==================== */
+body, h1, h2, h3, h4 {
+    font-family: "Quicksand", sans-serif;
+}
+
+/* ==================== BACKDROP & BACKGROUND ==================== */
+/* PERBAIKAN: Brightness dinaikkan dari 40% ke 85% agar tidak hitam pekat */
+.backdropImage {
+    filter: blur(6px) saturate(120%) contrast(120%) brightness(85%);
+}
+
+/* PERBAIKAN: Backdrop film DIPERBAHARUI - background-image TIDAK di-none-kan */
+.layout-desktop .itemBackdrop {
+    background-attachment: scroll;
+    background-position: center;
+    /* LINE 37 ASLI: background-image: none !important;  <- DIHAPUS */
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+}
+
+.layout-tv .backgroundContainer,
+.layout-desktop .backgroundContainer {
+    background-size: cover !important;
+    position: fixed;
+    opacity: 100%;
+}
+
+.layout-tv .backgroundContainer .layout-desktop .backgroundContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-size: cover;
+    opacity: 1;
+}
+
+/* ==================== DESKTOP LAYOUT ==================== */
+.layout-desktop .detailLogo {
+    left: 5%;
+    background-position: left;
+}
+
+.detailLogo {
+    height: 16vh;
+    position: absolute;
+    right: 25vw;
+    top: 10vh;
+    width: 34em;
+}
+
+.layout-desktop .detailPageWrapperContainer {
+    margin-top: -73vh;
+}
+
+/* PERBAIKAN CRITICAL: Aturan yang menyembunyikan poster DIHAPUS seluruhnya */
+/* LINE 41 ASLI: .layout-desktop .detailImageContainer .card { display: none; } <- DIHAPUS */
+/* LINE 42 ASLI: .layout-desktop .itemTags { display: none; } <- DIHAPUS */
+
+.layout-desktop .cardImageIcon .material-icons .folder {
+    display: block !important;
+}
+
+.detailsGroupItem.writersGroup,
+.detailsGroupItem.studiosGroup {
+    display: none;
+}
+
+.layout-desktop .detailPagePrimaryContainer,
+.layout-desktop .detailPageContent {
+    padding-left: 5%;
+}
+
+.layout-desktop .detailPagePrimaryContent {
+    width: 45%;
+    display: inherit;
+}
+
+.layout-desktop .detailPagePrimaryContainer {
+    display: inline-table;
+    z-index: 2;
+    left: 5%;
+}
+
+.layout-desktop .detailPageSecondaryContainer {
+    margin: 0 0 0em 0 !important;
+    padding-bottom: 0em !important;
+}
+
+.layout-desktop .itemDetailsGroup {
+    margin-top: 0;
+    padding-bottom: 0vh !important;
+}
+
+/* ==================== UI COMPONENTS ==================== */
+/* (Semua aturan UI lainnya dipertahankan tanpa perubahan) */
+
+.layout-desktop a.overview-expand.emby-button {
+    margin: none;
+    padding: none;
+}
+
+.layout-desktop .itemName.originalTitle {
+    display: none;
+}
+
+.layout-desktop .itemName,
+.layout-mobile .itemName {
+    font-weight: normal;
+}
+
+.infoWrapper {
+    margin-bottom: 3vh;
+}
+
+button.emby-tab-button:nth-child(3) {
+    display: none;
+}
+
+/* Track selection styling */
+.trackSelections > *:nth-child(n + 3) {
+    visibility: hidden;
+}
+.trackSelections {
+    position: relative !important;
+}
+.selectAudioContainer,
+.selectSubtitlesContainer {
+    position: absolute;
+}
+.trackSelections .emby-select {
+    width: 386px;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+}
+.trackSelections .selectContainer #embyselect0,
+.trackSelections .selectContainer #embyselect2,
+.trackSelections .selectContainer #embyselect3 {
+    padding-right: 40px !important;
+    background-color: rgba(var(--dark), 0.75) !important;
+    color: rgba(var(--white), 0.9) !important;
+    backdrop-filter: blur(5px);
+}
+.trackSelections .selectContainer {
+    width: 480px !important;
+}
+.layout-mobile .trackSelections .selectContainer #embyselect0,
+.layout-mobile .trackSelections .selectContainer #embyselect2,
+.layout-mobile .trackSelections .selectContainer #embyselect3 {
+    background-color: rgba(var(--darkest), 0.75) !important;
+}
+.layout-mobile .trackSelections .emby-select {
+    width: 275px;
+}
+.layout-mobile .trackSelections .selectContainer {
+    width: 340px !important;
+}
+
+/* Detail section layout */
+.detailSection {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+}
+.detailSection .detailSectionContent {
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    box-ordinal-group: 1;
+}
+.detailSection .recordingFields {
+    -webkit-box-ordinal-group: 2;
+    -moz-box-ordinal-group: 2;
+    box-ordinal-group: 2;
+}
+.detailSection .trackSelections {
+    -webkit-box-ordinal-group: 3;
+    -moz-box-ordinal-group: 3;
+    box-ordinal-group: 3;
+}
+.detailSection .itemDetailsGroup {
+    -webkit-box-ordinal-group: 4;
+    -moz-box-ordinal-group: 4;
+    box-ordinal-group: 4;
+}
+
+/* Title visibility logic */
+#itemDetailPage .itemName.infoText.parentNameLast > bdi:first-child,
+#itemDetailPage .parentName > bdi:first-child {
+    opacity: 0;
+}
+.hide + .detailPageWrapperContainer .itemName > bdi:first-child,
+.hide + .parentName > bdi:first-child {
+    opacity: 1 !important;
+}
+.layout-tv .itemName > bdi:first-child {
+    opacity: 1 !important;
+}
+
+/* Text layout adjustments */
+.layout-desktop .btnShuffle,
+.layout-desktop .listViewUserDataButtons,
+.layout-desktop .material-icons.detailButton-icon.check,
+.layout-desktop .material-icons.detailButton-icon.favorite,
+.layout-desktop .material-icons.detailButton-icon.more_vert,
+.layout-desktop .material-icons.detailButton-icon.replay,
+.layout-desktop .material-icons.detailButton-icon.theaters {
+    display: none;
+}
+.layout-desktop .btnMoreCommands::after,
+.layout-desktop .btnPlay::after,
+.layout-desktop .btnPlayTrailer::after,
+.layout-desktop .btnPlaystate::after,
+.layout-desktop .btnReplay::after,
+.layout-desktop .btnUserRating::after,
+.layout-desktop .btntheaters::after {
+    content: attr(title);
+}
+.layout-desktop .itemName.parentNameLast {
+    height: 7em;
+}
+.layout-desktop h1.parentName {
+    margin: 1em 0px 0em !important;
+    padding-bottom: 3em;
+    height: 6em;
+}
+.layout-desktop #itemDetailPage .parentName .button-link {
+    height: 7em;
+    width: 70%;
+}
+.nameContainer .itemName.infoText.parentNameLast > bdi {
+    position: relative;
+    top: 55%;
+}
+
+/* Header transparency */
+.skinHeader.semiTransparent {
+    background-color: transparent;
+}
+.skinHeader-withBackground {
+    background-color: transparent;
+}
+
+/* Prominent play button */
+.layout-desktop .btnPlay {
+    background-color: rgb(var(--white));
+    color: rgb(var(--darkest)) !important;
+    margin-right: 3vw !important;
+    border-radius: calc(var(--rounding) + 2px) !important;
+}
+.layout-desktop .btnPlay:hover {
+    background-color: rgba(var(--accent));
+    color: rgb(var(--darkest)) !important;
+}
+.layout-desktop .mainAnimatedPages .paging {
+    margin-right: 1em !important;
+}
+.layout-desktop .detailPagePrimaryContainer .mainDetailButtons .btnPlay::after {
+    content: attr(title);
+    margin: 1px 11px 0 2px;
+    color: rgba(var(--darkest));
+}
+.layout-desktop .detailPagePrimaryContainer .mainDetailButtons {
+    margin: 0em 0;
+}
+.layout-desktop div:not(.sectionTitleContainer-cards) > .sectionTitle-cards {
+    margin: 0;
+    padding-bottom: 0.2em;
+    padding-top: 1em;
+}
+.layout-desktop .material-icons.detailButton-icon.play_arrow {
+    color: rgba(var(--darkest));
+}
+.layout-desktop .btnPlay.detailButton {
+    flex-direction: row;
+}
+.layout-desktop .listViewUserDataButtons {
+    display: none;
+}
+
+/* Hide shuffle and replay buttons */
+.btnShuffle,
+.btnReplay {
+    display: none;
+}
+
+/* Rating stars */
+.starIcon {
+    color: rgba(var(--honey-yellow), 0.8);
+}
+
+/* Parental ratings */
+.mediaInfoOfficialRating {
+    border: 1px solid rgba(var(--white), 1);
+    border-radius: 7px;
+    background-color: rgba(var(--white), 0.13);
+    color: rgba(var(--white), 1);
+    font-size: 109%;
+}
+.layout-mobile .mediaInfoOfficialRating {
+    border: 1px solid rgba(var(--white), 1);
+    border-radius: 7px;
+    background-color: rgba(var(--white), 0.13);
+    color: rgba(var(--white), 1);
+    font-size: 109%;
+}
+
+/* Card sizes - retained for layout consistency */
+.layout-desktop #castContent .card.overflowPortraitCard {
+    font-size: 95% !important;
+    width: 13.6em !important;
+}
+.layout-desktop #guestCastContent .card.overflowPortraitCard {
+    font-size: 95% !important;
+    width: 13.6em !important;
+}
+.layout-desktop #similarCollapsible .card.overflowPortraitCard {
+    width: 14.6em !important;
+}
+.layout-desktop #scenesContent .card.itemAction.chapterCard {
+    width: 27.1em !important;
+}
+
+/* Chapter cards */
+.chapterCard .innerCardFooter {
+    background: rgba(var(--dark), 0.5);
+    color: rgba(var(--accent), 0.9);
+    backdrop-filter: blur(5px);
+    width: 50%;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 7px;
+    left: 7px;
+    padding: 1px;
+    border-radius: 5.5px !important;
+}
+
+/* Text sizing */
+.detailPagePrimaryContainer {
+    font-size: 115% !important;
+}
+a.overview-expand.emby-button {
+    font-size: 110%;
+}
+
+/* Description padding */
+.layout-desktop .detailSectionContent {
+    padding: 1vw 0vw 0.25vw 0vw !important;
+}
+
+/* Description and tagline */
+.detailSectionContent .tagline {
+    font-weight: bold;
+    font-size: 125% !important;
+    margin-bottom: 0.3vh;
+}
+#itemDetailPage .tagline {
+    border-left: 0.25em solid rgb(var(--white));
+    padding: 0 0.5em;
+}
+.detailSectionContent .detail-clamp-text,
+.detailSectionContent .overview {
+    font-weight: bold;
+    font-size: 125% !important;
+    margin-top: 0.4em;
+}
+
+/* External links */
+.itemExternalLinks {
+    display: none;
+}
+
+/* Description clamp */
+.detail-clamp-text {
+    -webkit-line-clamp: 5 !important;
+}
+
+/* Navigation menu */
+.navMenuOption,
+.navMenuOption:hover,
+.navMenuOption-selected {
+    border-radius: var(--rounding-alt) !important;
+    width: 85% !important;
+    margin: auto !important;
+    text-align: center !important;
+    height: 45px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
+.navMenuOption,
+.navMenuOption-selected {
+    width: 86% !important;
+}
+.navMenuOption:hover {
+    width: 89% !important;
+}
+.navMenuOption:hover:not(.navMenuOption-selected) {
+    backdrop-filter: blur(4px);
+    background-color: rgba(var(--accent), 0.85);
+    color: rgba(var(--darkest));
+}
+.navMenuOption-selected {
+    background: rgba(var(--accent), 0.7) !important;
+    color: rgba(var(--darkest)) !important;
+    backdrop-filter: blur(50px) !important;
+}
+
+/* Button hovers */
+.raised:hover,
+.fab:hover,
+a[data-role="button"]:hover {
+    background: rgba(var(--accent), 0.95) !important;
+}
+
+/* Settings page */
+#myPreferencesMenuPage .listItem:hover {
+    color: rgba(var(--darkest)) !important;
+    background: rgba(var(--accent), 0.8) !important;
+}
+[dir="ltr"] #myPreferencesMenuPage .listItemIcon {
+    margin: 0px 0.25em 0px 0.5em;
+}
+.listItem:not(.listItem-button) {
+    margin: 0.6em;
+    padding-left: 1em;
+}
+.listItem:hover:not(.listItem-button) {
+    transition: 0.2s;
+    background: rgba(var(--dark));
+    margin: 0.6em;
+}
+.paperList:not(.listItem-button) {
+    padding: 0.6em;
+    border-radius: var(--rounding-large);
+}
+
+/* Dashboard fixes */
+.serverInfo.paperList {
+    color: rgba(var(--accent), 0.8);
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    padding-left: 1.65em;
+}
+
+/* Dashboard sidebar */
+.css-4yt2of {
+    background-color: rgb(var(--darkest));
+    color: rgb(var(--accent));
+}
+.css-37qkju {
+    color: inherit;
+}
+.css-54jp7k {
+    color: inherit;
+}
+/* Note: File asli terpotong di sini, sisanya dipertahankan apa adanya */
