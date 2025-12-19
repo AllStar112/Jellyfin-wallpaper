@@ -3,17 +3,21 @@ name: 🖼️ Update Wallpaper CSS
 on:
   push:
     paths:
-      - 'wallpapers/**'    # HANYA trigger jika ada perubahan di folder wallpapers
+      - 'wallpapers/**'
     branches: [ main ]
-  workflow_dispatch:       # Bisa trigger manual dari GitHub UI
+  workflow_dispatch:
 
 jobs:
   generate-css:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ← INI YANG PENTING!
     
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: 🐍 Setup Python
       uses: actions/setup-python@v5
@@ -25,14 +29,24 @@ jobs:
     
     - name: 📤 Commit & Push CSS
       run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        # Setup git
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
         
-        if git diff --quiet wallpaper.css; then
-          echo "⏭️ No changes to CSS"
+        # Cek apakah file CSS dibuat
+        if [ -f "wallpaper.css" ]; then
+          echo "✅ CSS file exists, size: $(wc -l < wallpaper.css) lines"
+          
+          # Tampilkan preview
+          echo "=== PREVIEW (10 lines) ==="
+          head -10 wallpaper.css
         else
-          git add wallpaper.css
-          git commit -m "🔄 Auto-update CSS [$(date +'%Y-%m-%d %H:%M')]"
-          git push
-          echo "✅ CSS updated and pushed"
+          echo "❌ ERROR: wallpaper.css not created!"
+          exit 1
         fi
+        
+        # Commit dan push
+        git add wallpaper.css
+        git commit -m "🔄 Auto-update CSS [$(date +'%Y-%m-%d %H:%M:%S')]" || echo "No changes to commit"
+        git push origin main
+        echo "✅ CSS pushed to repository"
