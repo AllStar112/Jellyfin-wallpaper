@@ -1,24 +1,27 @@
 /* Background Slideshow untuk .backgroundContainer */
 @keyframes backgroundSlideshow {
-  0.00%, 37.50% {
+  0.00%, 28.00% {
+    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/ERD_basdat.drawio.png');
+  }
+  33.00%, 61.00% {
     background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa1.jpg');
   }
-  50.00%, 87.50% {
+  66.00%, 94.00% {
     background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa2.jpg');
   }
   100% {
-    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa1.jpg');
+    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/ERD_basdat.drawio.png');
   }
 }
 
 /* Hanya terapkan ke .backgroundContainer */
 .backgroundContainer {
-  animation: backgroundSlideshow 16s infinite ease-in-out !important;
+  animation: backgroundSlideshow 19.5s infinite ease-in-out !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
-  transition: background-image 2s ease-in-out !important;
+  transition: background-image 1.5s ease-in-out !important;
 }
 
 /* Efek overlay agar konten tetap terbaca */
