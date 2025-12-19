@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 JELLYFIN WALLPAPER CSS GENERATOR
-FORMAT PERSIS SEPERTI TEMPLATE: 3s gambar + 1s transisi
+
 """
 
 import os
@@ -14,8 +14,9 @@ BRANCH = "main"
 WALLPAPERS_FOLDER = "wallpapers"
 CSS_OUTPUT = "wallpaper.css"
 
-DISPLAY_SECONDS = 6  # 3 detik gambar
-FADE_SECONDS = 2     # 1 detik transisi
+DISPLAY_SECONDS = 6  # detik gambar
+FADE_SECONDS = 2     # detik transisi
+DISPLAY_RATIO = 0.75
 # ==========================
 
 def get_jsdelivr_url(filename):
@@ -55,7 +56,7 @@ def calculate_percentages(num_images):
         for i in range(num_images):
             segment = 100 / num_images
             start = i * segment
-            display_end = start + (segment * 0.75)  # 75% untuk display
+            display_end = start + (segment * DISPLAY_RATIO)  # 75% untuk display
             
             percentages.append({
                 "start": round(start, 2),
@@ -146,9 +147,10 @@ def main():
     # 5. Save to file
     with open(CSS_OUTPUT, 'w', encoding='utf-8') as f:
         f.write("\n".join(css_lines))
-    
+
+    total_per_image = DISPLAY_SECONDS + FADE_SECONDS
     print(f"✅ CSS generated: {CSS_OUTPUT}")
-    print(f"⏱️  Total duration: {total_seconds}s ({num_images} gambar × 4s)")
+    print(f"⏱️  Total duration: {total_seconds}s ({num_images} gambar × {total_per_image}s)")
     
     # Show timing
     print(f"\n📊 Timing (PERSIS seperti template):")
