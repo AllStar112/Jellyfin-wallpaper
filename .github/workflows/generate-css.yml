@@ -9,12 +9,15 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # IZIN KHUSUS UNTUK MENULIS
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}  # PAKAI TOKEN KHUSUS
         
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -24,8 +27,10 @@ jobs:
     - name: Generate CSS
       run: python scripts/generate.py
     
-    - name: Auto Commit & Push
+    - name: Auto Commit
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: "🤖 Auto-update wallpaper CSS"
         file_pattern: generated/wallpapers.css
+        commit_user_name: 'github-actions[bot]'
+        commit_user_email: '41898282+github-actions[bot]@users.noreply.github.com'
