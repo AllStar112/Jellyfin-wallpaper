@@ -1,8 +1,4 @@
-.backgroundContainer,
-.layout-desktop .backgroundContainer,
-.layout-tv .backgroundContainer,
-#loginPage .backgroundContainer {
-    background-color: #000 !important;
+    background-color: #000000 !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
@@ -17,33 +13,33 @@
 
     /* wa1.jpg */
     0.00%, 37.50% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        background-image:
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
             url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa1.jpg') !important;
     }
     
     /* Transition: wa1.jpg → wa2.jpg */
     37.50%, 50.00% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        background-image:
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
             url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa2.jpg'),
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
             url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa1.jpg') !important;
     }
     
     /* wa2.jpg */
     50.00%, 87.50% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        background-image:
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
             url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa2.jpg') !important;
     }
     
     /* Loop: wa2.jpg → wa1.jpg */
     87.50%, 100% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-            url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa1.jpg'),
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        background-image:
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+            url('wa1.jpg'),
+            linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
             url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/wa2.jpg') !important;
     }
     
