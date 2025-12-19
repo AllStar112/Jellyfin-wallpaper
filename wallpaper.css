@@ -16,12 +16,12 @@
 
 /* Hanya terapkan ke .backgroundContainer */
 .backgroundContainer {
-  animation: backgroundSlideshow 12s infinite ease-in-out !important;
+  animation: backgroundSlideshow 24s infinite ease-in-out !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
-  transition: background-image 1s ease-in-out !important;
+  transition: background-image 2s ease-in-out !important;
 }
 
 /* Efek overlay agar konten tetap terbaca */
