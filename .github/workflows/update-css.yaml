@@ -1,198 +1,38 @@
-name: Generate Wallpaper CSS
+name: 🖼️ Update Wallpaper CSS
 
 on:
   push:
     paths:
-      - 'wallpapers/**'
+      - 'wallpapers/**'    # HANYA trigger jika ada perubahan di folder wallpapers
     branches: [ main ]
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'
+  workflow_dispatch:       # Bisa trigger manual dari GitHub UI
 
 jobs:
   generate-css:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
+    - name: 📥 Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     
-    - name: Setup Python
+    - name: 🐍 Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     
-    - name: Generate CSS with jsDelivr CDN
-      run: |
-        # Download skrip generator
-        cat > generate_css.py << 'EOF'
-#!/usr/bin/env python3
-import os
-import glob
-from datetime import datetime
-
-# Konfigurasi - PAKAI jsDelivr CDN
-CONFIG = {
-    "github_user": "AllStar112",
-    "repo_name": "Jellyfin-wallpaper",
-    "branch": "main",
-    "wallpaper_dir": "wallpapers",
-    "css_output": "wallpaper.css",
-    "duration_per_image": 15,
-    "fade_duration": 2,
-    "overlay_opacity": 0.6
-}
-
-def get_jsdelivr_url(filename):
-    """Generate jsDelivr CDN URL"""
-    # Encode spasi dan karakter khusus
-    from urllib.parse import quote
-    encoded_file = quote(filename)
+    - name: 📝 Generate CSS
+      run: python3 .github/scripts/generate_css.py
     
-    return f"https://cdn.jsdelivr.net/gh/{CONFIG['github_user']}/{CONFIG['repo_name']}@{CONFIG['branch']}/wallpapers/{encoded_file}"
-
-def get_image_files():
-    """Get all image files from wallpapers folder"""
-    extensions = ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif']
-    image_files = []
-    
-    for ext in extensions:
-        pattern = os.path.join(CONFIG['wallpaper_dir'], f'*{ext}')
-        image_files.extend(glob.glob(pattern))
-        image_files.extend(glob.glob(pattern.upper()))
-    
-    # Filter dan sort
-    image_files = [f for f in image_files if os.path.isfile(f)]
-    image_files.sort()
-    
-    return image_files
-
-def generate_css():
-    """Generate CSS file"""
-    image_files = get_image_files()
-    
-    if not image_files:
-        print("⚠️ No images found in wallpapers folder")
-        css_content = "/* No wallpapers found in wallpapers/ folder */"
-    else:
-        total_images = len(image_files)
-        percentage_per_image = 100 / total_images
-        fade_pct = CONFIG['fade_duration']
-        
-        # Build keyframes
-        keyframes = []
-        keyframes.append("@keyframes backgroundSlideshow {")
-        
-        for i, img_path in enumerate(image_files):
-            filename = os.path.basename(img_path)
-            cdn_url = get_jsdelivr_url(filename)
-            
-            start_percent = i * percentage_per_image
-            display_end = start_percent + percentage_per_image - fade_pct
-            
-            keyframes.append(f"  /* Image {i+1}: {filename} */")
-            keyframes.append(f"  {start_percent:.2f}% {{")
-            keyframes.append(f"    background-image: url('{cdn_url}');")
-            keyframes.append("  }")
-            
-            keyframes.append(f"  {display_end:.2f}%, {start_percent + percentage_per_image - 0.01:.2f}% {{")
-            keyframes.append(f"    background-image: url('{cdn_url}');")
-            keyframes.append("  }")
-        
-        # Loop back to first image
-        first_filename = os.path.basename(image_files[0])
-        first_url = get_jsdelivr_url(first_filename)
-        keyframes.append("  100% {")
-        keyframes.append(f"    background-image: url('{first_url}');")
-        keyframes.append("  }")
-        keyframes.append("}")
-        
-        keyframes_css = "\n".join(keyframes)
-        
-        total_duration = total_images * CONFIG['duration_per_image']
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        css_content = f"""/* ============================================ */
-/* JELLYFIN WALLPAPER SLIDESHOW CSS */
-/* ============================================ */
-/* 
- * Generated automatically by GitHub Actions
- * Repository: https://github.com/{CONFIG['github_user']}/{CONFIG['repo_name']}
- * CDN: jsDelivr (https://cdn.jsdelivr.net)
- * Total images: {total_images}
- * Duration: {total_duration}s ({total_duration/60:.1f} min)
- * Generated: {current_time}
- */
-
-{keyframes_css}
-
-/* ============================================ */
-/* MAIN STYLES */
-/* ============================================ */
-.backgroundContainer {{
-  animation: backgroundSlideshow {total_duration}s infinite ease-in-out !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-}}
-
-/* Overlay for readability */
-.backgroundContainer::before {{
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: rgba(0, 0, 0, {CONFIG['overlay_opacity']}) !important;
-  z-index: 0 !important;
-}}
-
-/* Responsive */
-@media (max-width: 768px) {{
-  .backgroundContainer {{
-    background-attachment: scroll !important;
-    animation-duration: {total_duration * 0.7}s !important;
-  }}
-}}
-"""
-    
-    # Write to file
-    with open(CONFIG['css_output'], 'w', encoding='utf-8') as f:
-        f.write(css_content)
-    
-    return len(image_files)
-
-if __name__ == "__main__":
-    count = generate_css()
-    print(f"✅ Generated CSS with {count} images")
-EOF
-
-        # Run the script
-        python3 generate_css.py
-        
-        # Show output
-        echo "=== CSS Preview (first 20 lines) ==="
-        head -20 wallpaper.css
-        echo ""
-        echo "=== Total images found ==="
-        ls -la wallpapers/*.{jpg,jpeg,png,webp,bmp,gif} 2>/dev/null | wc -l
-    
-    - name: Commit and push CSS
+    - name: 📤 Commit & Push CSS
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         
-        # Check if CSS changed
-        if ! git diff --quiet wallpaper.css; then
-          echo "🔄 CSS updated, committing changes..."
+        if git diff --quiet wallpaper.css; then
+          echo "⏭️ No changes to CSS"
+        else
           git add wallpaper.css
           git commit -m "🔄 Auto-update CSS [$(date +'%Y-%m-%d %H:%M')]"
           git push
-          echo "✅ CSS pushed to repository"
-        else
-          echo "⏭️  No changes to CSS, skipping commit"
+          echo "✅ CSS updated and pushed"
         fi
