@@ -1,34 +1,9 @@
-.backgroundContainer,
-.layout-desktop .backgroundContainer,
-.layout-tv .backgroundContainer,
-#loginPage .backgroundContainer {
+.backgroundContainer {
     background-color: #000 !important;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                     url('https://raw.githubusercontent.com/AllStar112/Jellyfin-wallpaper/main/Zero_Two_noDark.gif') !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
     background-position: center center !important;
-    
-    /* 1 wallpapers × 4 seconds = 4s */
-    animation: slideshow 4s infinite !important;
-    animation-timing-function: ease-in-out !important;
-}
-
-@keyframes slideshow {
-
-    /* WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg */
-    0.00%, 75.00% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-            url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg') !important;
-    }
-    
-    /* Loop: WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg → WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg */
-    75.00%, 100% {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-            url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg'),
-            linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-            url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper/wallpapers/WhatsApp Image 2025-12-02 at 12.18.04_bd5a699e.jpg') !important;
-    }
-    
 }
