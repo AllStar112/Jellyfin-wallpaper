@@ -14,8 +14,8 @@ BRANCH = "main"
 WALLPAPERS_FOLDER = "wallpapers"
 CSS_OUTPUT = "wallpaper.css"
 
-DISPLAY_SECONDS = 3  # 3 detik gambar
-FADE_SECONDS = 1     # 1 detik transisi
+DISPLAY_SECONDS = 6  # 3 detik gambar
+FADE_SECONDS = 2     # 1 detik transisi
 # ==========================
 
 def get_jsdelivr_url(filename):
