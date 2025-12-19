@@ -1,0 +1,51 @@
+name: Generate Wallpaper CSS
+
+on:
+  push:
+    paths:
+      - 'wallpapers/**'      # Hanya trigger jika ada perubahan di folder wallpapers
+    branches: [ main ]
+  workflow_dispatch:         # Bisa di-trigger manual dari GitHub UI
+  schedule:
+    - cron: '0 0 * * *'      # Jalankan setiap hari jam 00:00 UTC
+
+jobs:
+  generate-css:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Generate CSS file
+      run: |
+        python generate_css.py
+        echo "=== Generated CSS Content Preview ==="
+        head -30 wallpaper.css
+        echo "Total images: $(ls wallpapers/*.{jpg,jpeg,png,webp,bmp} 2>/dev/null | wc -l)"
+    
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+        # Cek apakah ada perubahan di wallpaper.css
+        if git diff --quiet wallpaper.css; then
+          echo "⚠️ Tidak ada perubahan pada CSS, skip commit"
+        else
+          echo "✅ Ada perubahan, melakukan commit..."
+          git add wallpaper.css
+          git commit -m "🔄 Auto-update CSS from ${{ github.event_name }} event [$(date +'%Y-%m-%d %H:%M')]"
+          
+          # Push perubahan
+          git push
+          echo "✅ CSS berhasil diupdate dan di-push"
+        fi
