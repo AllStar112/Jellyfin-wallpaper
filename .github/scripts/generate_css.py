@@ -1,147 +1,122 @@
 #!/usr/bin/env python3
 """
-Jellyfin Wallpaper CSS Generator
-Generates CSS for an animated background slideshow with 3s display + 1s transition per image.
+JELLYFIN WALLPAPER CSS GENERATOR
+Generate CSS dengan format PERSIS seperti template
+3 detik gambar + 1 detik transisi
 """
 
 import os
-import sys
-import math
+import glob
 
-# ========= CONFIGURATION =========
-# GitHub repository details for jsDelivr URLs
-GITHUB_USER = "AllStar112"
+# ========= CONFIG =========
+REPO_OWNER = "AllStar112"
 REPO_NAME = "Jellyfin-wallpaper"
 BRANCH = "main"
+WALLPAPER_DIR = "wallpapers"
+CSS_OUTPUT = "wallpaper.css"
 
-# Path to the local wallpapers folder (relative to this script)
-WALLPAPERS_FOLDER = "wallpapers"
-
-# Output CSS file
-OUTPUT_CSS_FILE = "wallpaper.css"
-
-# Timing (in seconds)
-DISPLAY_TIME = 3  # Time each image is fully visible
-FADE_TIME = 1     # Time for crossfade to next image
-# ================================
+# TIMING: 3 detik gambar, 1 detik transisi
+DISPLAY_SECONDS = 3  # Waktu gambar full tampil
+FADE_SECONDS = 1     # Waktu transisi ke gambar berikutnya
+# ==========================
 
 def get_jsdelivr_url(filename):
-    """Generate a jsDelivr CDN URL for a filename."""
+    """Generate jsDelivr URL untuk gambar"""
     encoded_name = filename.replace(" ", "%20")
-    return f"https://cdn.jsdelivr.net/gh/{GITHUB_USER}/{REPO_NAME}@{BRANCH}/wallpapers/{encoded_name}"
+    return f"https://cdn.jsdelivr.net/gh/{REPO_OWNER}/{REPO_NAME}@{BRANCH}/{WALLPAPER_DIR}/{encoded_name}"
 
-def get_image_files():
-    """Get a sorted list of image files from the wallpapers folder."""
-    image_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif')
-    images = []
+def calculate_percentages(num_images):
+    """
+    Hitung persentase dengan format PERSIS seperti template:
+    - Format: X%, Y% { ... }  (dua persentase, sama seperti contoh)
+    - Contoh di template: 0%, 28% { ... } dan 33%, 61% { ... }
+    """
+    percentages = []
     
-    try:
-        for file in os.listdir(WALLPAPERS_FOLDER):
-            if file.lower().endswith(image_extensions):
-                images.append(file)
-    except FileNotFoundError:
-        print(f"ERROR: Folder '{WALLPAPERS_FOLDER}' not found.")
-        sys.exit(1)
+    # Total waktu per gambar (tampil + transisi)
+    total_per_image = DISPLAY_SECONDS + FADE_SECONDS
+    
+    for i in range(num_images):
+        # Start persentase untuk gambar ini
+        start_pct = (i * total_per_image * 100) / (num_images * total_per_image)
+        
+        # Akhir dari display time (sebelum fade out)
+        display_end_pct = start_pct + (DISPLAY_SECONDS * 100) / (num_images * total_per_image)
+        
+        # Format PERSIS seperti template: "start_pct%, display_end_pct%"
+        percentages.append({
+            'start': round(start_pct, 2),
+            'display_end': round(display_end_pct, 2),
+            'display_range': f"{start_pct:.2f}%, {display_end_pct:.2f}%"
+        })
+    
+    return percentages
+
+def main():
+    print("🔄 Generating CSS dengan format template...")
+    
+    # 1. Get semua gambar
+    images = []
+    for ext in ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif']:
+        pattern = os.path.join(WALLPAPER_DIR, f'*{ext}')
+        images.extend(glob.glob(pattern))
+        images.extend(glob.glob(pattern.upper()))
     
     if not images:
-        print(f"ERROR: No images found in '{WALLPAPERS_FOLDER}'.")
-        sys.exit(1)
+        print("❌ ERROR: Tidak ada gambar di folder 'wallpapers/'")
+        return
     
-    images.sort()
-    return images
-
-def calculate_keyframes(images):
-    """
-    Calculate the keyframe percentages based on your formula.
+    # Sort dan ambil nama file saja
+    images = sorted([os.path.basename(img) for img in images])
+    num_images = len(images)
     
-    For N images:
-    - Total cycle time = N * (DISPLAY_TIME + FADE_TIME) seconds
-    - Each image gets a 'display block' and a 'fade-out block'.
-    - The transition from the last image back to the first must also be 1 second.
-    """
-    n = len(images)
-    total_cycle_time = n * (DISPLAY_TIME + FADE_TIME)
+    print(f"📸 Found {num_images} images: {', '.join(images)}")
     
-    # Time per segment (display or fade) as a percentage of total cycle
-    display_pct = (DISPLAY_TIME / total_cycle_time) * 100
-    fade_pct = (FADE_TIME / total_cycle_time) * 100
+    # 2. Hitung persentase PERSIS seperti template
+    percentages = calculate_percentages(num_images)
     
-    keyframes = []
+    # 3. Hitung total waktu animasi
+    total_seconds = num_images * (DISPLAY_SECONDS + FADE_SECONDS)
     
-    for i, img in enumerate(images):
-        # Start of this image's display block
-        start_display = i * (display_pct + fade_pct)
-        # End of this image's display block (start of fade)
-        end_display = start_display + display_pct
-        # End of this image's fade block
-        end_fade = end_display + fade_pct
-        
-        # For the last image, the fade block transitions back to image 0
-        if i == n - 1:
-            # The 100% keyframe is handled separately to close the loop
-            keyframes.append({
-                'img': img,
-                'start': start_display,
-                'display_end': end_display,
-                'fade_end': 100.0  # The fade ends at 100%
-            })
-        else:
-            keyframes.append({
-                'img': img,
-                'start': start_display,
-                'display_end': end_display,
-                'fade_end': end_fade
-            })
-    
-    return keyframes, total_cycle_time
-
-def generate_css(images):
-    """Generate the complete CSS file content."""
-    
-    keyframes, total_cycle_time = calculate_keyframes(images)
-    n = len(images)
-    
+    # 4. Build CSS PERSIS seperti template
     css_lines = []
+    
+    # HEADER - PERSIS
     css_lines.append("/* Background Slideshow untuk .backgroundContainer */")
-    css_lines.append("/* Auto-generated by script - DO NOT EDIT MANUALLY */")
-    css_lines.append("/* Total Images: {} | Display: {}s | Fade: {}s | Cycle: {}s */".format(
-        n, DISPLAY_TIME, FADE_TIME, total_cycle_time))
-    css_lines.append("")
     css_lines.append("@keyframes backgroundSlideshow {")
     
-    # Generate keyframe blocks
-    for i, kf in enumerate(keyframes):
-        img_url = get_jsdelivr_url(kf['img'])
+    # KEYFRAMES - FORMAT PERSIS SEPERTI TEMPLATE
+    for i, img in enumerate(images):
+        url = get_jsdelivr_url(img)
+        pct = percentages[i]
         
-        css_lines.append(f"  /* Image {i+1}: {kf['img']} */")
-        css_lines.append(f"  {kf['start']:.4f}%, {kf['display_end']:.4f}% {{")
-        css_lines.append(f"    background-image: url('{img_url}');")
+        # Format: "X%, Y% { background-image: url(...); }"
+        css_lines.append(f"  {pct['display_range']} {{")
+        css_lines.append(f"    background-image: url('{url}');")
         css_lines.append(f"  }}")
-        
-        # The transition happens between display_end% and fade_end%
-        # For the last image, fade_end is 100%, which will loop back to image 0% (first image)
     
-    # Close the keyframes
-    first_img_url = get_jsdelivr_url(images[0])
+    # AKHIR - LOOP KE GAMBAR PERTAMA (PERSIS seperti baris 100% di template)
+    first_url = get_jsdelivr_url(images[0])
     css_lines.append(f"  100% {{")
-    css_lines.append(f"    background-image: url('{first_img_url}');")
+    css_lines.append(f"    background-image: url('{first_url}');")
     css_lines.append(f"  }}")
+    
     css_lines.append("}")
     css_lines.append("")
     
-    # Add the main .backgroundContainer styles (EXACTLY as in your template)
+    # BACKGROUND CONTAINER - PERSIS SEPERTI TEMPLATE
     css_lines.append("/* Hanya terapkan ke .backgroundContainer */")
     css_lines.append(".backgroundContainer {")
-    css_lines.append(f"  animation: backgroundSlideshow {total_cycle_time}s infinite ease-in-out !important;")
+    css_lines.append(f"  animation: backgroundSlideshow {total_seconds}s infinite ease-in-out !important;")
     css_lines.append("  background-size: cover !important;")
     css_lines.append("  background-position: center !important;")
     css_lines.append("  background-repeat: no-repeat !important;")
     css_lines.append("  background-attachment: fixed !important;")
-    css_lines.append("  transition: background-image 1s ease-in-out !important;")  # Matches your FADE_TIME
+    css_lines.append(f"  transition: background-image {FADE_SECONDS}s ease-in-out !important;")  # 1s transisi
     css_lines.append("}")
     css_lines.append("")
     
-    # Add the overlay
+    # OVERLAY - PERSIS SEPERTI TEMPLATE
     css_lines.append("/* Efek overlay agar konten tetap terbaca */")
     css_lines.append(".backgroundContainer::before {")
     css_lines.append('  content: "" !important;')
@@ -154,23 +129,19 @@ def generate_css(images):
     css_lines.append("  z-index: 0 !important;")
     css_lines.append("}")
     
-    return "\n".join(css_lines)
-
-def main():
-    print("=== Jellyfin Wallpaper CSS Generator ===")
-    print(f"Scanning folder: {WALLPAPERS_FOLDER}")
+    # 5. Write to file
+    with open(CSS_OUTPUT, 'w', encoding='utf-8') as f:
+        f.write("\n".join(css_lines))
     
-    images = get_image_files()
-    print(f"Found {len(images)} images: {', '.join(images[:3])}{'...' if len(images) > 3 else ''}")
+    print(f"✅ CSS generated: {CSS_OUTPUT}")
+    print(f"⏱️  Total duration: {total_seconds}s ({num_images} gambar × {DISPLAY_SECONDS+1}s)")
     
-    css_content = generate_css(images)
+    # Show timing details
+    print(f"\n📊 Timing details:")
+    for i, (img, pct) in enumerate(zip(images, percentages)):
+        print(f"  Gambar {i+1} ({img}): {pct['display_range']}")
     
-    with open(OUTPUT_CSS_FILE, 'w', encoding='utf-8') as f:
-        f.write(css_content)
-    
-    print(f"✅ CSS generated: {OUTPUT_CSS_FILE}")
-    print(f"⏱️  Total cycle time: {len(images) * (DISPLAY_TIME + FADE_TIME)} seconds")
-    print(f"📋 Copy the contents of '{OUTPUT_CSS_FILE}' to Jellyfin Dashboard → General → Custom CSS")
+    return True
 
 if __name__ == "__main__":
     main()
