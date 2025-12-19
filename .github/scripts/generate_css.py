@@ -14,8 +14,8 @@ BRANCH = "main"
 WALLPAPERS_FOLDER = "wallpapers"
 CSS_OUTPUT = "wallpaper.css"
 
-DISPLAY_SECONDS = 6  # detik gambar
-FADE_SECONDS = 2     # detik transisi
+DISPLAY_SECONDS = 5  # detik gambar
+FADE_SECONDS = 1.5     # detik transisi
 DISPLAY_RATIO = 0.75
 # ==========================
 
