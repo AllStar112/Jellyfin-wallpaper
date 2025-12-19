@@ -1,22 +1,19 @@
 /* Background Slideshow untuk .backgroundContainer */
 @keyframes backgroundSlideshow {
-  0.00%, 28.00% {
-    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/Gemini_Generated_Image_2e7sxh2e7sxh2e7s%20(1).png');
-  }
-  33.00%, 61.00% {
+  0.00%, 37.50% {
     background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa1.jpg');
   }
-  66.00%, 94.00% {
+  50.00%, 87.50% {
     background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa2.jpg');
   }
   100% {
-    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/Gemini_Generated_Image_2e7sxh2e7sxh2e7s%20(1).png');
+    background-image: url('https://cdn.jsdelivr.net/gh/AllStar112/Jellyfin-wallpaper@main/wallpapers/wa1.jpg');
   }
 }
 
 /* Hanya terapkan ke .backgroundContainer */
 .backgroundContainer {
-  animation: backgroundSlideshow 24s infinite ease-in-out !important;
+  animation: backgroundSlideshow 16s infinite ease-in-out !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
