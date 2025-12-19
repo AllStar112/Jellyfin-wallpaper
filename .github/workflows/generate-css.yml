@@ -3,8 +3,8 @@ name: Generate Wallpaper CSS
 on:
   push:
     paths:
-      - 'wallpapers/**'  # Hanya trigger kalau ada perubahan di folder wallpapers
-  workflow_dispatch:     # Bisa jalanin manual dari tab Actions
+      - 'wallpapers/**'
+  workflow_dispatch:
 
 jobs:
   generate:
@@ -23,11 +23,9 @@ jobs:
         
     - name: Generate CSS
       run: python scripts/generate.py
-      
-    - name: Commit generated CSS
-      run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add generated/wallpapers.css
-        git commit -m "🤖 Auto-update wallpaper CSS" || echo "No changes"
-        git push
+    
+    - name: Auto Commit & Push
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "🤖 Auto-update wallpaper CSS"
+        file_pattern: generated/wallpapers.css
